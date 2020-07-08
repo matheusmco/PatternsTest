@@ -21,14 +21,20 @@ namespace CompositeTest
     {
         private List<Component> _children = new List<Component>();
 
-        public Number(int level) : base(level) { }
+        public Number(int level) : base(level)
+        {
+            if (level == 0) return;
+            // TODO: improve this add
+            _children = new List<Component> { new Number(level - 1), new Number(level - 1) };
+        }
 
         public override void Add(Component c) => _children.Add(c);
 
         public override void Display(int l)
         {
-            Console.Write(new String(char.Parse(level.ToString()), l));
-            Console.WriteLine();
+            Console.Write(level);
+
+            if (_children != null && _children.Any()) Console.WriteLine();
 
             foreach (var item in _children)
             {
