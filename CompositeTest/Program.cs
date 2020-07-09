@@ -8,8 +8,16 @@ namespace CompositeTest
         {
             var a = new Number(3);
 
-            // TODO: remove number
-            a.Display(1);
+            var e = a.GetChildren();
+
+            foreach (var item in e)
+            {
+                foreach(var b in item.Value)
+                {
+                    Console.Write(b);
+                }
+                Console.WriteLine();
+            }
         }
     }
 }

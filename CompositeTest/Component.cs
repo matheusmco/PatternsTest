@@ -13,8 +13,7 @@ namespace CompositeTest
             this.level = level;
         }
 
-        public abstract void Add(Component c);
-        public abstract void Display(int l);
+        public abstract Dictionary<int, List<int>> GetChildren();
     }
 
     class Number : Component
@@ -23,23 +22,33 @@ namespace CompositeTest
 
         public Number(int level) : base(level)
         {
-            if (level == 0) return;
-            // TODO: improve this add
+            if (level - 1 == 0) return;
             _children = new List<Component> { new Number(level - 1), new Number(level - 1) };
         }
 
-        public override void Add(Component c) => _children.Add(c);
-
-        public override void Display(int l)
+        public override Dictionary<int, List<int>> GetChildren()
         {
-            Console.Write(level);
-
-            if (_children != null && _children.Any()) Console.WriteLine();
-
-            foreach (var item in _children)
+            var dict = new Dictionary<int, List<int>>
             {
-                item.Display(l + 1);
+                { level, new List<int> { level } }
+            };
+
+            foreach (var child in _children)
+            {
+                foreach (var childDict in child.GetChildren())
+                {
+                    if (dict.ContainsKey(childDict.Key))
+                    {
+                        dict[childDict.Key].AddRange(childDict.Value);
+                    }
+                    else
+                    {
+                        dict.Add(childDict.Key, childDict.Value);
+                    }
+                }
             }
+
+            return dict;
         }
     }
 }
